@@ -5,7 +5,6 @@ const useQuestionFetch = (selected, pageNumber) => {
   const [isLoading, setIsLoading] = useState(false);
   const [questionList, setQuestionList] = useState([]);
   const [hasMore, setHasMore] = useState();
-  console.log('useQuestionFetch');
 
   useEffect(() => {
     setQuestionList([]);
@@ -15,7 +14,7 @@ const useQuestionFetch = (selected, pageNumber) => {
     setIsLoading(true);
     axios({
       method: 'get',
-      url: 'https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&site=stackoverflow',
+      // url: 'https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&site=stackoverflow',
       params: {
         tagged: selected,
         page: pageNumber,

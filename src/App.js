@@ -8,7 +8,7 @@ import useQuestionFetch from './hooks/useQuestionFetch';
 import axios from 'axios';
 
 function App() {
-  const [input, setInput] = useState('');
+  // const [input, setInput] = useState('');
   const [tagList, setTagList] = useState([]);
   const [selected, setSelected] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
@@ -18,31 +18,32 @@ function App() {
     pageNumber
   );
 
-  useEffect(() => {
-    // let cancel;
-    axios({
-      method: 'get',
-      url: 'https://api.stackexchange.com/2.3/tags?order=desc&sort=popular&site=stackoverflow',
-      params: {
-        page: 1,
-        pagesize: 10,
-        inname: input,
-        // cancelToken: new axios.CancelToken((c) => (cancel = c)),
-      },
-    })
-      .then((res) => {
-        setTagList(res.data.items);
-        setSelected(res.data.items[0]?.name);
-        setPageNumber(1);
-      })
-      .catch((error) => console.log(error));
-    // return () => cancel();
-  }, [input]);
+  // useEffect(() => {
+  //   // let cancel;
+  //   axios({
+  //     method: 'get',
+  //     url: 'https://api.stackexchange.com/2.3/tags?order=desc&sort=popular&site=stackoverflow',
+  //     params: {
+  //       page: 1,
+  //       pagesize: 10,
+  //       inname: input,
+  //       // cancelToken: new axios.CancelToken((c) => (cancel = c)),
+  //     },
+  //   })
+  //     .then((res) => {
+  //       setTagList(res.data.items);
+  //       setSelected(res.data.items[0]?.name);
+  //       setPageNumber(1);
+  //     })
+  //     .catch((error) => console.log(error));
+  //   // return () => cancel();
+  // }, [input]);
 
-  const handleInputChange = (event) => {
-    setInput(event.target.value);
-    setPageNumber(1);
-  };
+  // todo: 送出的按鈕不能用event
+  // const handleInputChange = (event) => {
+  //   setInput(event.target.value);
+  //   setPageNumber(1);
+  // };
 
   const handleTagChange = (name) => {
     setSelected(name);
@@ -51,10 +52,10 @@ function App() {
 
   const handleObserver = useCallback(
     (entries) => {
-      console.log('handleObserver');
+      // console.log('handleObserver');
       const target = entries[0];
       if (target.isIntersecting) {
-        console.log('isIntersecting');
+        // console.log('isIntersecting');
         if (hasMore) {
           setPageNumber((prev) => prev + 1);
         }
@@ -64,7 +65,6 @@ function App() {
   );
 
   useEffect(() => {
-    console.log('useEffect');
     const option = {
       root: null,
       rootMargin: '20px',
@@ -76,7 +76,7 @@ function App() {
 
   return (
     <div className="App">
-      <Search handleInputChange={handleInputChange} />
+      <Search />
       <div className="mt5">
         <Tags
           tagList={tagList}

@@ -1,0 +1,3 @@
+export const SEARCH_TYPES = {
+  CHANGE_INPUT: 'CHANGE_INPUT',
+};
