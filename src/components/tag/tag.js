@@ -1,11 +1,21 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectedTagSelector } from '../../store/tag/selectors';
+import { selectTag } from '../../store/tag/actions';
 
-const Tag = ({ name, handleTagChange, selected }) => {
+const Tag = ({ name }) => {
+  const selectedTag = useSelector(selectedTagSelector);
+  const dispatch = useDispatch();
+
+  const handleTagChange = (name) => {
+    dispatch(selectTag(name));
+  };
+
   return (
     <ol
       id={name}
       className={`list ba b--light-blue br3 pa2 bw1 ml1 tc ${
-        selected === name ? 'bg-light-blue' : null
+        selectedTag === name ? 'bg-light-blue' : null
       }`}
       onClick={() => handleTagChange(name)}
     >

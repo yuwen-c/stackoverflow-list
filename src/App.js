@@ -1,11 +1,12 @@
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import './App.css';
 import 'tachyons';
-import { useEffect, useState, useRef, useCallback } from 'react';
 import Search from './components/search/Search';
 import Tags from './components/tags/Tags';
 import Questions from './components/questions/Questions';
 import useQuestionFetch from './hooks/useQuestionFetch';
-import axios from 'axios';
+import { fetchTags } from './store/tag/actions';
 
 function App() {
   // const [input, setInput] = useState('');
@@ -13,42 +14,16 @@ function App() {
   const [selected, setSelected] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const loader = useRef(null);
+  const dispatch = useDispatch();
+
   const { questionList, isLoading, hasMore } = useQuestionFetch(
     selected,
     pageNumber
   );
 
-  // useEffect(() => {
-  //   // let cancel;
-  //   axios({
-  //     method: 'get',
-  //     url: 'https://api.stackexchange.com/2.3/tags?order=desc&sort=popular&site=stackoverflow',
-  //     params: {
-  //       page: 1,
-  //       pagesize: 10,
-  //       inname: input,
-  //       // cancelToken: new axios.CancelToken((c) => (cancel = c)),
-  //     },
-  //   })
-  //     .then((res) => {
-  //       setTagList(res.data.items);
-  //       setSelected(res.data.items[0]?.name);
-  //       setPageNumber(1);
-  //     })
-  //     .catch((error) => console.log(error));
-  //   // return () => cancel();
-  // }, [input]);
-
-  // todo: 送出的按鈕不能用event
-  // const handleInputChange = (event) => {
-  //   setInput(event.target.value);
-  //   setPageNumber(1);
-  // };
-
-  const handleTagChange = (name) => {
-    setSelected(name);
-    setPageNumber(1);
-  };
+  useEffect(() => {
+    dispatch(fetchTags(''));
+  }, []);
 
   const handleObserver = useCallback(
     (entries) => {
@@ -78,11 +53,7 @@ function App() {
     <div className="App">
       <Search />
       <div className="mt5">
-        <Tags
-          tagList={tagList}
-          handleTagChange={handleTagChange}
-          selected={selected}
-        />
+        <Tags />
         <Questions questionList={questionList} />
         <div ref={loader} className="pv1" />
         {isLoading && <p>Loading...</p>}

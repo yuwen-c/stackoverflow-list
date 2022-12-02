@@ -1,5 +1,6 @@
 import React from 'react';
 import { inputOnChange } from '../../store/search/actions';
+import { fetchTags } from '../../store/tag/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { inputSelector } from '../../store/search/selectors';
 
@@ -8,7 +9,9 @@ const Search = () => {
   const input = useSelector(inputSelector);
 
   const handleInputChange = (event) => {
-    dispatch(inputOnChange(event.target.value));
+    const value = event.target.value;
+    dispatch(inputOnChange(value));
+    dispatch(fetchTags(value));
   };
   return (
     <div className="pv2 flex w-80 justify-center fixed bg-white mw8">
