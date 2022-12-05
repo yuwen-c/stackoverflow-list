@@ -11,7 +11,6 @@ import {
 import { selectedTagSelector } from '../../store/tag/selectors';
 
 const Questions = () => {
-  console.log('question component re-runs');
   const dispatch = useDispatch();
   const questionList = useSelector(questionListSelector);
   const selectedTag = useSelector(selectedTagSelector);
@@ -20,7 +19,9 @@ const Questions = () => {
   const pageNumber = useSelector(pageNumberSelector);
 
   useEffect(() => {
-    dispatch(fetchQuestionList(selectedTag, 1));
+    if (selectedTag.length > 0) {
+      dispatch(fetchQuestionList(selectedTag, 1));
+    }
   }, [dispatch, selectedTag]);
 
   return (
