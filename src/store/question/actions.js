@@ -19,10 +19,33 @@ const fetchStart = () => {
   };
 };
 
-const fetchSuccess = (res) => {
+// check if fetch the same page
+const fetchSuccess = (res, questionList) => {
+  const { has_more, items } = res.data;
+  let payload;
+  if (questionList.length === 0) {
+    payload = {
+      questionList: items,
+      hasMore: has_more,
+    };
+  } else if (
+    questionList.filter((item) => item.question_id === items[0]?.question_id)
+      .length === 0
+  ) {
+    const newList = [...questionList, ...items];
+    payload = {
+      questionList: newList,
+      hasMore: has_more,
+    };
+  } else {
+    payload = {
+      questionList,
+      hasMore: has_more,
+    };
+  }
   return {
     type: QUESTION_TYPES.FETCH_QUESTION_SUCCESS,
-    payload: res,
+    payload,
   };
 };
 
@@ -34,7 +57,7 @@ const fetchFailed = (error) => {
 };
 
 export const fetchQuestionList = () => async (dispatch, getState) => {
-  const { pageNumber } = getState().question;
+  const { pageNumber, questionList } = getState().question;
   const { selectedTag } = getState().tag;
 
   dispatch(fetchStart());
@@ -48,7 +71,7 @@ export const fetchQuestionList = () => async (dispatch, getState) => {
     },
   })
     .then((res) => {
-      dispatch(fetchSuccess(res.data));
+      dispatch(fetchSuccess(res, questionList));
     })
     .catch((error) => {
       dispatch(fetchFailed(error));

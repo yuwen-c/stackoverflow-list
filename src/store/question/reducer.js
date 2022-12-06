@@ -17,13 +17,12 @@ const questionReducer = (currentState = INITIAL_STATE, action = {}) => {
         isLoading: true,
       };
     case QUESTION_TYPES.FETCH_QUESTION_SUCCESS:
-      const { has_more, items } = payload;
-      const newList = [...new Set([...currentState.questionList, ...items])];
+      const { hasMore, questionList } = payload;
       return {
         ...currentState,
         isLoading: false,
-        questionList: newList,
-        hasMore: has_more,
+        questionList,
+        hasMore,
       };
     case QUESTION_TYPES.FETCH_QUESTION_FAILED:
       return {
@@ -38,6 +37,7 @@ const questionReducer = (currentState = INITIAL_STATE, action = {}) => {
     case QUESTION_TYPES.BACK_TO_FIRST_PAGE:
       return {
         ...currentState,
+
         pageNumber: 1,
       };
     default:
