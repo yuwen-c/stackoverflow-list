@@ -1,28 +1,51 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Question from '../question/Question';
-import { fetchQuestionList } from '../../store/question/actions';
+import { fetchQuestionList, nextPage } from '../../store/question/actions';
 import {
   questionListSelector,
   isQuestionLoadingSelector,
   hasMoreSelector,
-  pageNumberSelector,
 } from '../../store/question/selectors';
 import { selectedTagSelector } from '../../store/tag/selectors';
 
 const Questions = () => {
   const dispatch = useDispatch();
+  const loader = useRef(null);
+
   const questionList = useSelector(questionListSelector);
   const selectedTag = useSelector(selectedTagSelector);
   const isLoading = useSelector(isQuestionLoadingSelector);
   const hasMore = useSelector(hasMoreSelector);
-  const pageNumber = useSelector(pageNumberSelector);
 
   useEffect(() => {
     if (selectedTag.length > 0) {
-      dispatch(fetchQuestionList(selectedTag, 1));
+      dispatch(fetchQuestionList());
     }
   }, [dispatch, selectedTag]);
+
+  const handleObserver = useCallback(
+    (entries) => {
+      const target = entries[0];
+      if (target.isIntersecting) {
+        if (hasMore) {
+          dispatch(nextPage());
+          dispatch(fetchQuestionList());
+        }
+      }
+    },
+    [hasMore, dispatch]
+  );
+
+  useEffect(() => {
+    const option = {
+      root: null,
+      rootMargin: '20px',
+      threshold: 0,
+    };
+    const observer = new IntersectionObserver(handleObserver, option);
+    if (loader.current) observer.observe(loader.current);
+  }, [handleObserver]);
 
   return (
     <div>
@@ -31,6 +54,8 @@ const Questions = () => {
             return <Question key={item.question_id} item={item} />;
           })
         : null}
+      <div ref={loader} className="pv1" />
+      {isLoading && <p>Loading...</p>}
     </div>
   );
 };

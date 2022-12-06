@@ -1,10 +1,15 @@
 import axios from 'axios';
 import { QUESTION_TYPES } from './types';
 
-export const changePageNumber = (pageNumber) => {
+export const nextPage = () => {
   return {
-    type: QUESTION_TYPES.CHANGE_PAGE_NUMBER,
-    payload: pageNumber,
+    type: QUESTION_TYPES.NEXT_PAGE,
+  };
+};
+
+export const backToFirstPage = () => {
+  return {
+    type: QUESTION_TYPES.BACK_TO_FIRST_PAGE,
   };
 };
 
@@ -28,13 +33,16 @@ const fetchFailed = (error) => {
   };
 };
 
-export const fetchQuestionList = (tag, pageNumber) => async (dispatch) => {
+export const fetchQuestionList = () => async (dispatch, getState) => {
+  const { pageNumber } = getState().question;
+  const { selectedTag } = getState().tag;
+
   dispatch(fetchStart());
   axios({
     method: 'get',
     url: 'https://api.stackexchange.com/2.3/questions?order=desc&sort=activity&site=stackoverflow',
     params: {
-      tagged: tag,
+      tagged: selectedTag,
       page: pageNumber,
       pagesize: 20,
     },

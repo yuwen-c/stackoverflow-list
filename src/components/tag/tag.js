@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectedTagSelector } from '../../store/tag/selectors';
 import { selectTag } from '../../store/tag/actions';
+import { backToFirstPage } from '../../store/question/actions';
 
 const Tag = ({ name }) => {
   const selectedTag = useSelector(selectedTagSelector);
@@ -9,6 +10,7 @@ const Tag = ({ name }) => {
 
   const handleTagChange = (name) => {
     dispatch(selectTag(name));
+    dispatch(backToFirstPage(1));
   };
 
   return (
